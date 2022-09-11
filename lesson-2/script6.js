@@ -2,13 +2,12 @@
 
 function mathOperation(arg1, arg2, operation) {
     switch (operation) {
-        case 'сложение': return arg1 + arg2;
-        case 'вычитание': return (arg1 - arg2);
-        case 'умножение': return (arg1 * arg2);
-        case 'деление': return (arg1 / arg2);
-        default: return ('Не умею(');
+        case 'addition': return arg1 + arg2;
+        case 'subtraction': return arg1 - arg2;
+        case 'multiplication': return arg1 * arg2;
+        case 'division': return arg1 / arg2;
+        default: return 'Не умею(';
     }
 }
 
-console.log(mathOperation(9, 6, 'деление'));
-
+console.log(mathOperation(9, 6, 'subtraction'));

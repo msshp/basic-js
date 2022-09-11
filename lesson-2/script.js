@@ -23,9 +23,7 @@ function calcResult(a, b) {
         c = Math.abs(a - b);
     } else if ((a < 0) && (b < 0)) {
         c = a * b;
-    } else if (((a >= 0) && (b < 0)) || ((a < 0) && (b >= 0))) {
-        c = a + b;
-    }
+    } else c = a + b;
 }
 
 calcResult(7, 4);
