@@ -1,0 +1,24 @@
+<meta charset="UTF-8">
+<script>
+    "use strict";
+
+    let num_in = Number(prompt('Введите число от 0 до 999'));
+    console.log(num_in);
+
+    function numToObj(num) {
+        if (0 <= num && num < 1000) {
+            let num_obj;
+            num_obj = {
+                hundreds: Math.floor(num / 100)
+            }
+            num_obj.dozens = Math.floor((num - num_obj.hundreds * 100) / 10);
+            num_obj.units = num - (num_obj.hundreds * 100 + num_obj.dozens * 10);
+            return num_obj;
+        } else {
+            console.log('Число превышает 999. Введите число от 0 до 999')
+        }
+    }
+
+    console.log(numToObj(num_in));
+
+</script>
