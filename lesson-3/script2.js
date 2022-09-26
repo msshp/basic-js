@@ -18,12 +18,3 @@ function countBasketPrice(goods) {
 }
 
 console.log(countBasketPrice(goods));
-
-
-
-for (let i = 0; i < goods.length; i++) {
-    sum += (goods[i][1]) * (goods[i][2]);
-
-}
-
-
