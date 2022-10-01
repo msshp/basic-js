@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Table</title>
+    <style>
+        .cell {
+            width: 40px;
+            height: 40px;
+        }
+
+        .white {
+            background: #dfcfc2;
+            width: 40px;
+            height: 40px;
+        }
+
+        .black {
+            background: #151401a9;
+            width: 40px;
+            height: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="chess-place">
+    </div>
+</body>
+<script>
+    'use script'
+
+    function chessВoard() {
+
+        let chessPlace = document.getElementById('chess-place');     // получаем ссылку на элемент доски
+
+        let table = document.createElement('table');                 // создаём объект таблицы
+        chessPlace.appendChild(table);                               // вставляем его в хтмл
+
+        for (let row = 0; row < 9; row++) {                          // определяем строку
+            let tr = document.createElement('tr');                   // создаём строку
+            table.appendChild(tr);                                   // помещаем её на поле
+
+            for (let col = 0; col < 9; col++) {                      // определяем колонку            
+                let th = document.createElement('th');              // создаём колонку в строке
+                th.className = 'cell'
+                if (col == 0 && row == 0) {
+                    tr.appendChild(th);                              // помещаем пустую ячейку заголовка
+                } else if (row == 0 && col != 0) {
+                    let cr = String.fromCharCode(64 + col);          // вычисляем код символа заголовка
+                    th.textContent = cr;                             // помещаем символ в ячейку заголовка
+                    tr.appendChild(th);                              // ячейку заголовка помещаем в строку
+                } else if (row != 0 && col == 0) {
+                    th.textContent = String(row);                    // нумеруем строку
+                    tr.appendChild(th);                              // помещаем в ячейку заголовка номер строки
+                } else if (row != 0 && col != 0) {
+                    let td = document.createElement('td');           // создаём ячейку таблицы
+                    tr.appendChild(td);                             // помещаем ячейку в строку
+                    if (row % 2 == 0) {                              // если это чётная строка
+                        if (col % 2 == 0) {                         // если это чётная колонка
+                            td.className = 'white';                 // красим ячейку в белый
+                        } else {                                   // если не чётная колонка
+                            td.className = 'black';                // красим ячейку в чёрный
+                        }
+                    } else {
+                        if (col % 2 != 0) {
+                            td.className = 'white';
+                        } else {
+                            td.className = 'black';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    chessВoard();
+
+</script>
+
+</html>
