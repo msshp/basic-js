@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Cart</title>
+    <style>
+        .tr {
+            width: 90px;
+            height: 20px;
+            border: 1px solid black;
+            text-align: right;
+            padding: 10px;
+        }
+
+        #basketPlace {
+            margin-bottom: 15px;
+        }
+
+        #cartPlace {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            width: 572px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cartPlace">
+        <div id="basketPlace">
+            <table id="basketTable" hidden>
+                <tr>
+                    <th class="tr">Номер <br> п.п.</th>
+                    <th class="tr">Название товара</th>
+                    <th class="tr">Кол-во</th>
+                    <th class="tr">Цена</th>
+                    <th class="tr">Сумма</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+<script>
+    "use strict";
+
+    let v = {            // создали объект корзины
+        goodsList: [
+            {
+                name: 'пальто',
+                count: 5,
+                price: 5000
+            },
+            {
+                name: 'куртка',
+                count: 3,
+                price: 3000
+            },
+            {
+                name: 'тренч',
+                count: 5,
+                price: 2000
+            }
+        ],
+        goodsCount: 0,   // общее кол-во всех товаров
+        goodsSum: 0,     // общая сумма всех товаров
+
+        basketView() {     // метод для вывода информации
+            let cartPlace = document.getElementById('cartPlace');       // получили доступ к диву
+
+
+            if (this.goodsList.length == 0) {          // если в корзине нет товаров
+                let bsp = document.getElementById('basketPlace');
+                let cart = document.createElement('div');
+                cart.textContent = 'Корзина пуста';   // выводим в див «корзина пуста»
+                basketPlace.appendChild(cart);        // добавляем див в basketPlace
+            } else {   // если в корзине есть товары
+                let table = document.getElementById('basketTable'); // получаем доступ к basketTable
+                table.hidden = false;  // показываем таблицу
+
+                for (let i = 0; i < this.goodsList.length; i++) {
+                    let line = document.createElement('tr');  // создаём строку
+
+
+                    this.goodsCount += this.goodsList[i].count;    // считаем общее кол-во товаров 
+                    let sum = this.goodsList[i].count * this.goodsList[i].price;      // сколько стоит данная позиция?
+                    this.goodsSum += sum;       // прибавляем к общей стоимости покупки
+
+                    let nm = document.createElement('td');    // столбец с номером товара
+                    nm.className = 'tr';
+                    nm.textContent = String(i + 1);
+                    line.appendChild(nm);
+
+                    let nme = document.createElement('td');   // столбец с наименованием товара
+                    nme.className = 'tr';
+                    nme.textContent = this.goodsList[i].name
+                    line.appendChild(nme);
+
+                    let count = document.createElement('td');   // столбец с количеством товара
+                    count.className = 'tr';
+                    count.textContent = String(this.goodsList[i].count)
+                    line.appendChild(count);
+
+                    let price = document.createElement('td');    // столбец с ценой каждого товара
+                    price.className = 'tr';
+                    price.textContent = String(this.goodsList[i].price)
+                    line.appendChild(price);
+
+                    let summa = document.createElement('td');     // столбец с суммой каждой позиции
+                    summa.className = 'tr';
+                    summa.textContent = String(sum);
+                    line.appendChild(summa);
+
+                    table.appendChild(line); // помещаем строку в таблицу с товарами
+                }
+                let footInfo = document.createElement('div');   // добавляем строку с итогом
+                footInfo.textContent = 'В корзине: ' + String(this.goodsCount) + ' товаров на сумму ' + String(this.goodsSum) + ' рублей';
+                cartPlace.appendChild(footInfo);  // помещаем строку в cartPlace
+            }
+        }
+    }
+
+    v.basketView();   // вызываем метод вывода информации
+
+</script>
+
+</html>
