@@ -17,4 +17,4 @@ function countBasketPrice(goods) {
     return sum;
 }
 
-console.log(countBasketPrice(goods));
+
