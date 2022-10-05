@@ -1,0 +1,35 @@
+<meta charset="UTF-8">
+<script>
+
+
+    let basket = {
+        goods: [
+            {
+                name: 'пальто',
+                count: 1,
+                price: 5000
+            },
+            {
+                name: 'куртка',
+                count: 2,
+                price: 3000
+            },
+            {
+                name: 'тренч',
+                count: 1,
+                price: 2000
+            }
+        ],
+        countBasketPrice(goods) {
+            let i = 0;
+            let sum = 0;
+            for (i; i < this.goods.length; i++) {
+                sum += (this.goods[i].count) * (this.goods[i].price);
+            }
+            return sum;
+        }
+    }
+
+    console.log(basket.countBasketPrice(this.goods));
+
+</script>
