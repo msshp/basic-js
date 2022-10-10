@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог и корзина</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .goodLineStyle {
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Каталог</h2>
+    <div id="catalog"></div>
+    <h2>Корзина</h2>
+    <div id="cart"></div>
+</body>
+<script>
+    'use strict'
+
+    const storage = [     //  склад
+        {
+            name: 'пальто',
+            count: 10,
+            price: 5000
+        },
+        {
+            name: 'куртка',
+            count: 10,
+            price: 3000
+        },
+        {
+            name: 'тренч',
+            count: 10,
+            price: 2000
+        }
+    ];
+
+    let cart = []; // корзина
+
+    function catalogView() {  // рисуем каталог
+        let catalog = document.getElementById('catalog');    // получаем доступ к диву
+        catalog.textContent = '';      // чистим каталог перед перерисовкой кол-ва товаров
+        for (let i = 0; i < storage.length; i++) {
+            let goodLine = document.createElement('div');    // создаём див с объектом товара
+            goodLine.classList.add('goodLineStyle');
+            goodLine.textContent = String(storage[i].name + ' (' + String(storage[i].count) + ') ' + storage[i].price + ' ' + 'руб' + ' ');
+
+            let goodButton = document.createElement('button');   // создаём кнопку
+            goodButton.textContent = String('В корзину');
+            goodButton.value = i;    // кнопке присваиваем значение
+            goodButton.onclick = addToBasket;     // добавляем обработчик событий на кнопку
+
+            goodLine.appendChild(goodButton);   // добавляем кнопку в линию
+            catalog.appendChild(goodLine);     // добавляем линию в каталог
+        };
+    };
+
+    function addToBasket() {
+        let ind = window.event.srcElement.value;
+        let pos = {
+            name: storage[ind].name,
+            count: 1,
+            price: storage[ind].price
+        };
+
+        for (let n = 0; n < storage.length; n++) {
+            if (pos.name === storage[n].name) {
+                if (storage[n].count == 0) return;
+                storage[n].count--;
+                catalogView();
+                break;
+            };
+        };
+
+        for (let n = 0; n < cart.length; n++) {
+            if (pos.name === cart[n].name) {
+                cart[n].count++;
+                cartView();
+                return;
+            };
+
+        }
+
+        cart.push(pos);
+        cartView();
+    };
+
+
+
+    function cartView() {
+        let summa = 0;
+        let totalCount = 0;
+        let basket = document.getElementById('cart');
+        basket.textContent = '';
+        if (!cart.length) {
+            basket.textContent = 'Корзина пуста';
+            return;
+        };
+
+
+        cart.forEach(element => {
+
+            let line = document.createElement('div');
+            summa += element.count * element.price;
+            totalCount += element.count;
+            let m = element.name + ' ' + String(element.count) + ' ' + String(element.price) + ' ' + String(element.count * element.price);
+            line.textContent = m;
+            basket.appendChild(line);
+
+        });
+
+        if (cart.length) {
+            let totalLine = document.createElement('div');
+
+            let l = 'Всего товаров: ' + String(totalCount) + ' на сумму ' + String(summa) + ' рублей.';
+            // console.log(l);
+            totalLine.textContent = l;
+            basket.appendChild(totalLine);
+        };
+
+        let buttonEmpty = document.createElement('button');
+        buttonEmpty.textContent = 'Очистить корзину';
+        buttonEmpty.onclick = cartEmpty;
+        basket.appendChild(buttonEmpty);
+    };
+
+    function cartEmpty() {
+        cart = [];
+        cartView();
+
+    };
+
+    catalogView(storage);
+    cartView();
+
+</script>
+
+</html>
