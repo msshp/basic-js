@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог и корзина</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .goodLineStyle {
+            padding: 5px;
+        }
+
+        .bC {
+            padding-bottom: 10px;
+        }
+
+        .fB {
+            margin-bottom: 10px;
+        }
+
+        .bE {
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Каталог</h2>
+    <div id="catalog"></div>
+    <h2>Корзина</h2>
+    <div id="cart">
+    </div>
+</body>
+<script>
+    'use strict'
+
+    const storage = [     //  склад
+        {
+            name: 'пальто',
+            count: 10,
+            price: 5000
+        },
+        {
+            name: 'куртка',
+            count: 10,
+            price: 3000
+        },
+        {
+            name: 'тренч',
+            count: 10,
+            price: 2000
+        }
+    ];
+
+    let cart = []; // корзина
+
+    function catalogView() {  // рисуем каталог
+        let catalog = document.getElementById('catalog');    // получаем доступ к диву
+        catalog.textContent = '';      // чистим каталог перед перерисовкой кол-ва товаров
+        for (let i = 0; i < storage.length; i++) {
+            let goodLine = document.createElement('div');    // создаём див с объектом товара
+            goodLine.classList.add('goodLineStyle');
+            goodLine.textContent = String(storage[i].name + ' (' + String(storage[i].count) + ') ' + storage[i].price + ' ' + 'руб' + ' ');
+
+            let goodButton = document.createElement('button');   // создаём кнопку
+            goodButton.textContent = String('В корзину');
+            goodButton.value = i;    // кнопке присваиваем значение
+            goodButton.onclick = addToBasket;     // добавляем обработчик событий на кнопку
+
+            goodLine.appendChild(goodButton);   // добавляем кнопку в линию
+            catalog.appendChild(goodLine);     // добавляем линию в каталог
+        };
+    };
+
+    function addToBasket() {     // добавление товаров в корзину
+        let ind = window.event.srcElement.value;
+        let pos = {  // копируем объект из каталога
+            name: storage[ind].name,
+            count: 1,
+            price: storage[ind].price
+        };
+
+        for (let n = 0; n < storage.length; n++) {
+            if (pos.name === storage[n].name) {
+                if (storage[n].count == 0) return;
+                storage[n].count--;
+                catalogView();
+                break;
+            };
+        };
+
+        for (let n = 0; n < cart.length; n++) {
+            if (pos.name === cart[n].name) {
+                cart[n].count++;
+                cartView();
+                return;
+            };
+
+        }
+
+        cart.push(pos);
+        cartView();
+    };
+
+
+
+    function cartView() {   // рисуем корзину
+
+        // состав
+
+        let summa = 0;
+        let totalCount = 0;
+        let basket = document.getElementById('cart');
+        basket.textContent = '';
+        if (!cart.length) {  // если в корзину ничего не добавили
+            basket.textContent = 'Корзина пуста';
+            return;
+        };
+
+        let basketComposition = document.createElement('div');
+        let basketCompositionTitle = document.createElement('h4');
+        basketCompositionTitle.textContent = 'Состав корзины';
+        basketComposition.className = 'bC';
+        basketComposition.appendChild(basketCompositionTitle);
+
+        // позиции в корзине
+
+
+        let index = 0;
+        cart.forEach(element => {
+
+            let line = document.createElement('div');
+            summa += element.count * element.price;
+            totalCount += element.count;
+            let m = element.name + ' ' + String(element.count) + ' ' + String(element.price) + ' ' + String(element.count * element.price) + ' '; // информация
+            line.textContent = m;
+            let countChangeUp = document.createElement('button');   // кнопка больше
+            let countChangeDown = document.createElement('button');   // кнопка меньше
+            countChangeUp.value = index;
+            countChangeDown.value = index;
+            countChangeUp.textContent = String('↑');
+            countChangeDown.textContent = String('↓');
+            countChangeUp.onclick = up;
+            countChangeDown.onclick = down;
+
+
+            // добавление всего
+
+            line.appendChild(countChangeUp);
+            line.appendChild(countChangeDown);
+            basketComposition.appendChild(line);
+            index++;
+        });
+
+        // обработчики кнопок up и down
+
+        function up() {
+            let index = window.event.srcElement.value;    // достаём номер элемента массива
+            if (storage[index].count == 0) return;
+            if (cart[index].count == 10) return;
+            cart[index].count++;
+            storage[index].count--;
+            cartView();
+            catalogView();
+        };
+
+        function down() {
+            let index = window.event.srcElement.value;    // достаём номер элемента массива
+            if (storage[index].count == 10) return;
+            if (cart[index].count == -1) return;
+            console.log(cart);
+            cart[index].count--;
+            storage[index].count++;
+            cartView();
+            catalogView();
+        };
+
+
+        // вывод суммы
+
+        if (cart.length) {
+            let totalLine = document.createElement('div');
+
+            let l = 'Всего товаров: ' + String(totalCount) + ' на сумму ' + String(summa) + ' рублей.';
+
+            totalLine.textContent = l;
+            basketComposition.appendChild(totalLine);
+        };
+
+
+        // очистка корзины
+
+        let buttonEmpty = document.createElement('button');
+        buttonEmpty.textContent = 'Очистить корзину';
+        buttonEmpty.className = 'bE';
+        buttonEmpty.onclick = cartEmpty;
+        basketComposition.appendChild(buttonEmpty);
+
+        function cartEmpty() {
+            cart = [];
+            cartView();
+
+        };
+
+        basket.appendChild(basketComposition);     // добавили блок с составом корзины
+
+
+        // далее
+
+        let furtherButton = document.createElement('button');
+        furtherButton.textContent = 'Далее';
+        furtherButton.className = 'fB';
+        furtherButton.onclick = next;
+        basket.appendChild(furtherButton);
+
+        function next() {
+
+            //basketComposition.hidden = true;     // свернуть блок состав корзины
+
+            if (addressСomment.hidden === true) { addressСomment.hidden = false } else (addressСomment.hidden = true);
+        };
+
+        // function viewDiv() {
+        //     document.getElementById('element').hidden = !;
+        //     document.getElementById('element').hidden;
+        // }
+
+        let further = document.createElement('div');     // создали блок далее
+        basket.appendChild(further);           // добавили блок далее
+
+        // блок с адресом и комментарием
+
+        let addressСomment = document.createElement('div');
+        let address = document.createElement('div');
+        let comment = document.createElement('div');
+
+
+        let addressTitle = document.createElement('h4');
+        let commentTitle = document.createElement('h4');
+
+        addressTitle.textContent = 'Адрес ';
+        commentTitle.textContent = 'Комментарий ';
+
+        address.appendChild(addressTitle);
+        comment.appendChild(commentTitle);
+
+        let addressInput = document.createElement('input');
+        address.appendChild(addressInput);
+        let commentInput = document.createElement('input');
+        comment.appendChild(commentInput);
+
+        addressСomment.appendChild(address);
+        addressСomment.appendChild(comment);
+        further.appendChild(addressСomment);
+
+        addressСomment.hidden = true;
+    };
+
+    catalogView(storage);
+    cartView();
+
+</script>
+
+</html>
