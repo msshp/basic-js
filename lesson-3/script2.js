@@ -16,3 +16,4 @@ function countBasketPrice(goods) {
 
     return sum;
 }
+
